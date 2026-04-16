@@ -7,6 +7,7 @@ import {
     FolderKanban,
     GalleryVerticalEnd,
     LayoutDashboard,
+    LogOut,
     type LucideIcon,
     Shapes,
     Sparkles,
@@ -32,6 +33,8 @@ const navigation: NavItem[] = [
     { href: "/admin/categories", label: "Categories", icon: FolderKanban },
     { href: "/admin/svg", label: "SVG", icon: Shapes },
     { href: "/admin/tags", label: "Tags", icon: GalleryVerticalEnd },
+    { href: "/admin/logout", label: "Logout", icon: LogOut },
+
 ];
 
 function isActivePath(pathname: string, item: NavItem) {
@@ -45,9 +48,9 @@ export function AdminShell({ children }: { children: ReactNode }) {
     const pathname = usePathname();
 
     return (
-        <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(244,114,182,0.14),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.14),_transparent_28%),linear-gradient(180deg,_rgba(255,255,255,0.92),_rgba(248,250,252,1))] text-foreground dark:bg-[radial-gradient(circle_at_top_left,_rgba(244,114,182,0.08),_transparent_34%),radial-gradient(circle_at_top_right,_rgba(59,130,246,0.1),_transparent_28%),linear-gradient(180deg,_rgba(9,9,11,0.98),_rgba(15,23,42,1))]">
-            <div className="mx-auto flex min-h-screen max-w-[1600px] flex-col lg:flex-row">
-                <aside className="border-border/70 bg-background/85 backdrop-blur supports-[backdrop-filter]:bg-background/70 lg:sticky lg:top-0 lg:h-screen lg:w-72 lg:border-r">
+        <div className="min-h-screen">
+            <div className="mx-auto flex min-h-screen  flex-col lg:flex-row">
+                <aside className="border-border/70 bg-background/85 backdrop-blur  lg:sticky lg:top-0 lg:h-screen lg:w-72 lg:border-r">
                     <div className="flex h-full flex-col gap-6 p-5">
                         <div className="flex items-center gap-3 rounded-2xl border border-border/70 bg-card px-4 py-4 shadow-sm">
                             <div className="flex size-11 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-md shadow-primary/15">
