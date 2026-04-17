@@ -39,4 +39,13 @@ export const endpoints = {
         list: "/usage-events",
         summary: "/usage-events/summary",
     },
+
+    requestsvg: {
+        request: "/request-svg",
+        list: "/request-svg",
+        // PATCH /api/request-svg/:id/mark-added
+        markAdded: (id: string) => `/request-svg/${id}/mark-added`,
+
+    }
+
 } as const;

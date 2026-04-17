@@ -1,9 +1,11 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import { useSvgList } from "@/hooks/useSvg";
+import { createRequestSvgAction } from "@/services/request-svg/create.action";
 import type { ISvgListQuery } from "@/types/svg.types";
 
 
@@ -15,6 +17,8 @@ export default function SvgBrowseClient() {
     const pathname = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams();
+  const [requestedName, setRequestedName] = useState("");
+  const [submittingRequest, setSubmittingRequest] = useState(false);
 
     const query = useMemo<ISvgListQuery>(() => {
         const page = Number(searchParams.get("page") ?? 1);
@@ -67,6 +71,28 @@ export default function SvgBrowseClient() {
     const onSearch = (search: string) => updateUrl({ search, page: 1 });
     const onPageChange = (page: number) => updateUrl({ page });
 
+    const onRequestSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      const name = requestedName.trim();
+      if (!name) {
+        toast.error("Please enter a stack symbol name");
+        return;
+      }
+
+      setSubmittingRequest(true);
+      const res = await createRequestSvgAction({ name });
+      setSubmittingRequest(false);
+
+      if (res.success) {
+        toast.success(res.message || "Request submitted");
+        setRequestedName("");
+        return;
+      }
+
+      toast.error(res.message || "Failed to submit request");
+    };
+
     if (isError) {
         return (
             <p className="text-sm text-destructive">
@@ -109,7 +135,7 @@ export default function SvgBrowseClient() {
   </p>
 
   {/* Input Section */}
-  <div className="flex items-center gap-2 mt-6">
+  <form className="flex items-center gap-2 mt-6" onSubmit={onRequestSubmit}>
     
     <span className="text-sm  whitespace-nowrap">
       Please Add Stack symbols like:
@@ -118,14 +144,21 @@ export default function SvgBrowseClient() {
     <input
       type="text"
       placeholder="e.g. Spotify, Stripe..."
+      value={requestedName}
+      onChange={(e) => setRequestedName(e.target.value)}
+      disabled={submittingRequest}
       className="flex-1 h-10 px-3 rounded-md border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/40"
     />
 
-    <button className="h-10 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition">
-      Request
+    <button
+      type="submit"
+      disabled={submittingRequest}
+      className="h-10 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition disabled:cursor-not-allowed disabled:opacity-60"
+    >
+      {submittingRequest ? "Requesting..." : "Request"}
     </button>
 
-  </div>
+  </form>
 
 </div>
 
