@@ -29,7 +29,7 @@ export const endpoints = {
     svg: {
         list: "/svg",
         bySlug: (slug: string) => `/svg/${slug}`,
-        rawIcon: (slug: string) => `/svg/icons/${slug}`,
+        rawIcon: (slug: string) => `/svg/${slug}`,
         upload: "/svg/upload",
         paste: "/svg/paste",
         pasteBulk: "/svg/paste-bulk",

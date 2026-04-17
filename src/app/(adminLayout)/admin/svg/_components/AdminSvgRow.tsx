@@ -24,7 +24,7 @@ export function AdminSvgRow({
     onEdit: () => void;
     onCancelEdit: () => void;
 }) {
-    const previewUrl = svg.rawUrl ?? `${BASE_API_URL}/svg/icons/${svg.slug}`;
+    const previewUrl = svg.rawUrl ?? `${BASE_API_URL}/svg/${svg.slug}`;
     const [confirmDelete, setConfirmDelete] = useState(false);
 
     const update = useUpdateSvg(svg.slug);

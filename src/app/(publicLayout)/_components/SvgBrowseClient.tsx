@@ -1,70 +1,40 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 
 import { useSvgList } from "@/hooks/useSvg";
 import type { ISvgListQuery } from "@/types/svg.types";
 
+
 import { SvgGrid } from "./SvgGrid";
 import { SvgPagination } from "./SvgPagination";
 import { SvgSearchBar } from "./SvgSearchBar";
 
-export default function SvgBrowseClient({ initialQuery }: { initialQuery: ISvgListQuery }) {
+export default function SvgBrowseClient() {
+    const pathname = usePathname();
     const router = useRouter();
     const searchParams = useSearchParams();
 
     const query = useMemo<ISvgListQuery>(() => {
-        const page = Number(searchParams.get("page") ?? initialQuery.page ?? 1);
-        const limit = Number(searchParams.get("limit") ?? initialQuery.limit ?? 200);
+        const page = Number(searchParams.get("page") ?? 1);
+        const limit = Number(searchParams.get("limit") ?? 200);
         return {
             page,
             limit,
             sortBy:
-                (searchParams.get("sortBy") as ISvgListQuery["sortBy"]) ??
-                initialQuery.sortBy ??
-                "title",
+                (searchParams.get("sortBy") as ISvgListQuery["sortBy"]) ?? "title",
             sortOrder:
-                (searchParams.get("sortOrder") as ISvgListQuery["sortOrder"]) ??
-                initialQuery.sortOrder ??
-                "asc",
-            search: searchParams.get("search") || initialQuery.search || undefined,
-            categoryId: searchParams.get("categoryId") || initialQuery.categoryId || undefined,
-            tag: searchParams.get("tag") || initialQuery.tag || undefined,
+                (searchParams.get("sortOrder") as ISvgListQuery["sortOrder"]) ?? "asc",
+            search: searchParams.get("search") || undefined,
+            categoryId: searchParams.get("categoryId") || undefined,
+            tag: searchParams.get("tag") || undefined,
             visibility:
-                (searchParams.get("visibility") as ISvgListQuery["visibility"]) ??
-                initialQuery.visibility ??
-                "PUBLIC",
+                (searchParams.get("visibility") as ISvgListQuery["visibility"]) ?? "PUBLIC",
         };
-    }, [searchParams, initialQuery]);
+    }, [searchParams]);
 
-    const { data, isLoading, isError, error, isFetching } = useSvgList(query);
-
-    const updateUrl = useCallback(
-        (next: Partial<ISvgListQuery>) => {
-            const params = new URLSearchParams(searchParams.toString());
-            for (const [key, value] of Object.entries(next)) {
-                if (value === undefined || value === null || value === "") {
-                    params.delete(key);
-                } else {
-                    params.set(key, String(value));
-                }
-            }
-            router.push(`/browse?${params.toString()}`);
-        },
-        [router, searchParams],
-    );
-
-    const onSearch = (search: string) => updateUrl({ search, page: 1 });
-    const onPageChange = (page: number) => updateUrl({ page });
-
-    if (isError) {
-        return (
-            <p className="text-sm text-destructive">
-                Failed to load SVGs: {error instanceof Error ? error.message : "Unknown error"}
-            </p>
-        );
-    }
+    const { data, isError, error, isFetching } = useSvgList(query);
 
     const items = useMemo(() => {
         const list = data?.success ? data.data : [];
@@ -79,26 +49,113 @@ export default function SvgBrowseClient({ initialQuery }: { initialQuery: ISvgLi
     }, [data, query.sortBy, query.sortOrder]);
     const meta = data?.success ? data.meta : undefined;
 
+    const updateUrl = useCallback(
+        (next: Partial<ISvgListQuery>) => {
+            const params = new URLSearchParams(searchParams.toString());
+            for (const [key, value] of Object.entries(next)) {
+                if (value === undefined || value === null || value === "") {
+                    params.delete(key);
+                } else {
+                    params.set(key, String(value));
+                }
+            }
+            router.push(`${pathname}?${params.toString()}`);
+        },
+        [pathname, router, searchParams],
+    );
+
+    const onSearch = (search: string) => updateUrl({ search, page: 1 });
+    const onPageChange = (page: number) => updateUrl({ page });
+
+    if (isError) {
+        return (
+            <p className="text-sm text-destructive">
+                Failed to load SVGs: {error instanceof Error ? error.message : "Unknown error"}
+            </p>
+        );
+    }
+
     return (
-        <section className="space-y-6 container mx-auto px-4 py-8  bg-[#EDE9E6]">
-            <header className="flex flex-col gap-3">
-                <h1 className="font-heading text-3xl font-semibold tracking-tight">Browse SVGs</h1>
-                <p className="text-sm text-muted-foreground">
-                    Discover, copy, and embed icons from the public library.
-                </p>
-            </header>
-
-            <SvgSearchBar defaultValue={query.search ?? ""} onSubmit={onSearch} />
-
-            <SvgGrid items={items} loading={isLoading} fetching={isFetching} />
-
-            {meta ? (
+    <section className="space-y-6 max-w-6xl mx-auto py-8">
+   <header className="flex flex-col gap-3 text-center ">
+  <h1 className="font-heading text-3xl  font-bold tracking-tight">
+    Find Your Perfect Stack Symbols
+  </h1>
+  <p className="text-lg text-muted-foreground leading-relaxed">
+    Browse, copy, and embed high-quality Stack symbols from our public library to elevate your portfolio and projects.
+  </p>
+    </header>
+        <SvgSearchBar defaultValue={query.search ?? ""} onSubmit={onSearch} />
+            <SvgGrid items={items} fetching={isFetching} />
+    {meta ? (
                 <SvgPagination
                     page={meta.page}
                     totalPages={meta.totalPages}
                     onChange={onPageChange}
                 />
             ) : null}
+
+            {/*  */}
+            <div className="max-w-xl mx-auto mt-12 p-6 rounded-2xl border border-border/70 bg-[#eaded5] shadow-sm text-zinc-900 ">
+  
+  {/* Heading */}
+  <h2 className="text-xl font-bold tracking-tight text-center">
+    Can’t find your Stack Symbols?
+  </h2>
+
+  {/* Description */}
+  <p className="text-sm  text-center mt-2">
+    Tell us what you&apos;re looking for - we might add it to the library.
+  </p>
+
+  {/* Input Section */}
+  <div className="flex items-center gap-2 mt-6">
+    
+    <span className="text-sm  whitespace-nowrap">
+      Please Add Stack symbols like:
+    </span>
+
+    <input
+      type="text"
+      placeholder="e.g. Spotify, Stripe..."
+      className="flex-1 h-10 px-3 rounded-md border border-border bg-background text-sm outline-none focus:ring-2 focus:ring-primary/40"
+    />
+
+    <button className="h-10 px-4 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition">
+      Request
+    </button>
+
+  </div>
+
+</div>
+
+<footer className="mt-16 border-t border-border/70 py-6">
+  <div className="max-w-5xl mx-auto px-4 flex flex-col items-center justify-between gap-4 text-sm text-muted-foreground">
+    
+    
+    
+
+    {/* Center */}
+<p className="flex items-center gap-2">
+  Made by 
+  <a
+    href="https://abdulazizsajib.vercel.app/"
+    target="_blank"
+    rel="noopener noreferrer"
+    className=" text-zinc-900 underline font-bold transition flex items-center gap-1"
+  >
+    AbdulAzizSajib
+ 
+  </a>
+</p>
+
+  
+    <p>
+      © {new Date().getFullYear()} All rights reserved.
+    </p>
+
+  </div>
+</footer>
         </section>
     );
 }

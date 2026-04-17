@@ -44,7 +44,7 @@ export default async function BrowsePage({ searchParams }: { searchParams: Searc
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <SvgBrowseClient initialQuery={query} />
+            <SvgBrowseClient />
         </HydrationBoundary>
     );
 }

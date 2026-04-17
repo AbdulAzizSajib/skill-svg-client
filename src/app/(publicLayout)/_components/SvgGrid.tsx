@@ -1,27 +1,14 @@
 import type { ISvg } from "@/types/svg.types";
 
 import { SvgCard } from "./SvgCard";
-import { SvgCardSkeleton } from "./SvgCardSkeleton";
 
 export function SvgGrid({
     items,
-    loading,
     fetching,
 }: {
     items: ISvg[];
-    loading?: boolean;
     fetching?: boolean;
 }) {
-    if (loading) {
-        return (
-            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-                {Array.from({ length: 8 }).map((_, i) => (
-                    <SvgCardSkeleton key={i} />
-                ))}
-            </div>
-        );
-    }
-
     if (items.length === 0) {
         return (
             <div className="rounded-2xl border border-dashed border-border/70 bg-muted/30 p-10 text-center">
@@ -32,7 +19,7 @@ export function SvgGrid({
 
     return (
         <div
-            className="flex flex-wrap gap-4 justify-center sm:justify-start "
+            className="flex flex-wrap gap-4 justify-center items-center sm:justify-start "
             data-fetching={fetching ? "true" : undefined}
         >
             {items.map((svg) => (

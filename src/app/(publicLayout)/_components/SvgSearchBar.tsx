@@ -1,7 +1,7 @@
 "use client";
 
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 
@@ -13,6 +13,16 @@ export function SvgSearchBar({
     onSubmit: (search: string) => void;
 }) {
     const [value, setValue] = useState(defaultValue);
+
+    useEffect(() => {
+        setValue(defaultValue);
+    }, [defaultValue]);
+
+    useEffect(() => {
+        if (value === "" && defaultValue !== "") {
+            onSubmit("");
+        }
+    }, [value, defaultValue, onSubmit]);
 
     return (
         <form
@@ -28,11 +38,11 @@ export function SvgSearchBar({
                     type="search"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
-                    placeholder="Search SVGs by title or tag"
+                    placeholder="Search Your SVG..."
                     className="h-11 w-full rounded-xl border border-border/70 bg-background pl-10 pr-3 text-sm outline-none ring-0 focus:border-primary"
                 />
             </div>
-            <Button type="submit">Search</Button>
+            <Button className="h-10 px-4" type="submit">Search</Button>
         </form>
     );
 }
