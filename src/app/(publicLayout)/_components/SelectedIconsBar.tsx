@@ -1,11 +1,12 @@
 // src/app/(publicLayout)/_components/SelectedIconsBar.tsx
-"use client";
+'use client';
 
-import Image from "next/image";
-import { X, Copy, Trash2 } from "lucide-react";
-import { toast } from "sonner";
+import Image from 'next/image';
+import { X, Copy, Trash2 } from 'lucide-react';
+// import { toast } from "sonner";
+import toast from 'react-hot-toast';
 
-import { useSelectedIcons } from "@/context/SelectedIconsContext";
+import { useSelectedIcons } from '@/context/SelectedIconsContext';
 
 const BASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -14,18 +15,28 @@ export function SelectedIconsBar() {
 
   if (selected.length === 0) return null;
 
-  const combinedUrl = `${BASE_API_URL}/svg/${selected.map((s) => s.slug).join(",")}?w=64&h=64`;
+  const combinedUrl = `${BASE_API_URL}/svg/${selected.map((s) => s.slug).join(',')}?w=64&h=64`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(combinedUrl).then(() => {
-      toast.success("URL copied!", { description: combinedUrl });
+      toast.success(
+        `Copied ${selected.length} stack symbols to clipboard.`,
+
+        {
+          icon: '👏',
+          style: {
+            borderRadius: '10px',
+            background: '#333',
+            color: '#fff',
+          },
+        }
+      );
     });
   };
 
-//   fixed top-6 left-1/2 -translate-x-1/2 z-50 shadow-xl
+  //   fixed top-6 left-1/2 -translate-x-1/2 z-50 shadow-xl
   return (
     <div className="flex items-center gap-3 rounded-xl border border-border bg-background/95 backdrop-blur px-4 py-2 shadow-md">
-      
       {/* Selected icons preview */}
       <div className="flex items-center  flex-wrap gap-2">
         {selected.map((svg) => (

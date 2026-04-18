@@ -3,8 +3,9 @@ import { Geist, Geist_Mono, Space_Grotesk, Ubuntu } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import QueryProviders from "@/providers/QueryProvider";
-import { Toaster } from "@/components/ui/sonner";
+// import { Toaster } from "@/components/ui/sonner";
 import { SelectedIconsProvider } from "@/context/SelectedIconsContext";
+import toast, { Toaster } from 'react-hot-toast';
 
 const spaceGroteskHeading = Space_Grotesk({subsets:['latin'],variable:'--font-heading'});
 
@@ -47,7 +48,9 @@ export default function RootLayout({
          <SelectedIconsProvider>
           <QueryProviders>
           {children}
-          <Toaster position="top-right" richColors />
+          {/* <Toaster position="top-right" richColors /> */}
+            <Toaster  position="top-right"
+  reverseOrder={false} />
         </QueryProviders>
          </SelectedIconsProvider>
 
