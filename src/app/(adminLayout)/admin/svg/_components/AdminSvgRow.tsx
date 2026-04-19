@@ -70,104 +70,107 @@ export function AdminSvgRow({
     };
 
     return (
-        <li className="grid grid-cols-[80px_1fr_120px_120px_220px] items-center gap-4 px-4 py-3">
-            <div className="flex size-16 items-center justify-center rounded-lg border border-border/70 bg-muted/20">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                    src={previewUrl}
-                    alt={svg.title ?? svg.slug}
-                    className="max-h-12 max-w-12 object-contain"
-                    loading="lazy"
-                />
-            </div>
-
-            {editing ? (
-                <input
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="h-9 rounded-lg border border-border/70 bg-background px-2 text-sm"
-                    placeholder="Title"
-                />
-            ) : (
-                <div className="min-w-0">
-                    <p className="truncate font-medium">{svg.title ?? svg.slug}</p>
-                    <p className="truncate text-xs text-muted-foreground">{svg.slug}</p>
+        <tr className="align-middle">
+            <td className="px-4 py-3">
+                <div className="flex size-14 items-center justify-center rounded-lg border border-border/70 bg-muted/20">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src={previewUrl}
+                        alt={svg.title ?? svg.slug}
+                        className="max-h-10 max-w-10 object-contain"
+                        loading="lazy"
+                    />
                 </div>
-            )}
+            </td>
 
-            {editing ? (
-                <select
-                    value={visibility}
-                    onChange={(e) => setVisibility(e.target.value as Visibility)}
-                    className="h-9 rounded-lg border border-border/70 bg-background px-2 text-sm"
-                >
-                    {VISIBILITY_OPTIONS.map((v) => (
-                        <option key={v} value={v}>
-                            {v}
-                        </option>
-                    ))}
-                </select>
-            ) : (
-                <span className="rounded-full border border-border/70 bg-muted/40 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                    {svg.visibility}
-                </span>
-            )}
-
-            {editing ? (
-                <input
-                    value={tagsCsv}
-                    onChange={(e) => setTagsCsv(e.target.value)}
-                    className="h-9 rounded-lg border border-border/70 bg-background px-2 text-sm"
-                    placeholder="comma,separated,tags"
-                />
-            ) : (
-                <p className="truncate text-xs text-muted-foreground">
-                    {(svg.tags ?? []).map((t) => t.name).join(", ") || "—"}
-                </p>
-            )}
-
-            <div className="flex items-center justify-end gap-2">
+            <td className="px-4 py-3">
                 {editing ? (
-                    <>
-                        <Button size="sm" variant="outline" onClick={onCancelEdit}>
-                            Cancel
-                        </Button>
-                        <Button size="sm" onClick={handleSave} disabled={update.isPending}>
-                            {update.isPending ? "Saving..." : "Save"}
-                        </Button>
-                    </>
-                ) : confirmDelete ? (
-                    <>
-                        <Button size="sm" variant="outline" onClick={() => setConfirmDelete(false)}>
-                            Cancel
-                        </Button>
-                        <Button
-                            size="sm"
-                            variant="destructive"
-                            onClick={handleDelete}
-                            disabled={remove.isPending}
-                        >
-                            {remove.isPending ? "Deleting..." : "Confirm delete"}
-                        </Button>
-                    </>
+                    <div className="space-y-2">
+                        <input
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                            className="h-9 w-full rounded-lg border border-border/70 bg-background px-2 text-sm"
+                            placeholder="Title"
+                        />
+                        <input
+                            value={tagsCsv}
+                            onChange={(e) => setTagsCsv(e.target.value)}
+                            className="h-9 w-full rounded-lg border border-border/70 bg-background px-2 text-sm"
+                            placeholder="comma,separated,tags"
+                        />
+                    </div>
                 ) : (
-                    <>
-                        <Button size="sm" variant="outline" onClick={onEdit}>
-                            <Pencil className="size-3.5" />
-                            Edit
-                        </Button>
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => setConfirmDelete(true)}
-                            className="text-destructive hover:text-destructive"
-                        >
-                            <Trash2 className="size-3.5" />
-                            Delete
-                        </Button>
-                    </>
+                    <div className="min-w-0">
+                        <p className="truncate font-medium">{svg.title ?? svg.slug}</p>
+                        <p className="truncate text-xs text-muted-foreground">{svg.slug}</p>
+                    </div>
                 )}
-            </div>
-        </li>
+            </td>
+
+            <td className="px-4 py-3">
+                {editing ? (
+                    <select
+                        value={visibility}
+                        onChange={(e) => setVisibility(e.target.value as Visibility)}
+                        className="h-9 w-full rounded-lg border border-border/70 bg-background px-2 text-sm"
+                    >
+                        {VISIBILITY_OPTIONS.map((v) => (
+                            <option key={v} value={v}>
+                                {v}
+                            </option>
+                        ))}
+                    </select>
+                ) : (
+                    <span className="inline-block rounded-full border border-border/70 bg-muted/40 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                        {svg.visibility}
+                    </span>
+                )}
+            </td>
+
+            <td className="px-4 py-3">
+                <div className="flex items-center justify-end gap-2">
+                    {editing ? (
+                        <>
+                            <Button size="sm" variant="outline" onClick={onCancelEdit}>
+                                Cancel
+                            </Button>
+                            <Button size="sm" onClick={handleSave} disabled={update.isPending}>
+                                {update.isPending ? "Saving..." : "Save"}
+                            </Button>
+                        </>
+                    ) : confirmDelete ? (
+                        <>
+                            <Button size="sm" variant="outline" onClick={() => setConfirmDelete(false)}>
+                                Cancel
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="destructive"
+                                onClick={handleDelete}
+                                disabled={remove.isPending}
+                            >
+                                {remove.isPending ? "Deleting..." : "Confirm delete"}
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Button size="sm" variant="outline" onClick={onEdit}>
+                                <Pencil className="size-3.5" />
+                                Edit
+                            </Button>
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setConfirmDelete(true)}
+                                className="text-destructive hover:text-destructive"
+                            >
+                                <Trash2 className="size-3.5" />
+                                Delete
+                            </Button>
+                        </>
+                    )}
+                </div>
+            </td>
+        </tr>
     );
 }

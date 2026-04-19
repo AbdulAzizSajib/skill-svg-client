@@ -1,3 +1,4 @@
+import type { IRequestSvgListQuery } from "@/types/request-svg.types";
 import type { ISvgListQuery } from "@/types/svg.types";
 
 export const queryKeys = {
@@ -17,5 +18,10 @@ export const queryKeys = {
         all: ["tags"] as const,
         list: (query: object = {}) => [...queryKeys.tags.all, "list", query] as const,
         detail: (slug: string) => [...queryKeys.tags.all, "detail", slug] as const,
+    },
+    requestSvg: {
+        all: ["request-svg"] as const,
+        lists: () => [...queryKeys.requestSvg.all, "list"] as const,
+        list: (query: IRequestSvgListQuery) => [...queryKeys.requestSvg.lists(), query] as const,
     },
 } as const;
